@@ -1,5 +1,4 @@
-#ifndef RATIONAL_H
-#define RATIONAL_H
+#pragma once
 
 #include <QString>
 
@@ -35,7 +34,6 @@ Rational operator * (const Rational& a, const Rational& b);
 
 Rational operator / (const Rational& a, const Rational& b);
 
-#endif // RATIONAL_H
 
 
 

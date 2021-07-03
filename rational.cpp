@@ -12,7 +12,14 @@ Rational::Rational(int numerator, int denominator)
 {
     int a = numerator, b = denominator;
     /* Find Greatest Common Denominator - Euclidean algorithm */
-    if (a != 1){
+    if (b == 1) {
+        p = a;
+        q = 1;
+    }
+    else if (b == -1){
+        p = -a;
+        q = 1;
+    } else {
         while (a > 0 && b > 0) {
             if (a > b) {
                 a %= b;
@@ -22,12 +29,12 @@ Rational::Rational(int numerator, int denominator)
             }
         }
         a += b;
-    }
-    p = numerator / a;
-    q = denominator / a;
-    if (q < 0) {
-        p = -p;
-        q = -q;
+        p = numerator / a;
+        q = denominator / a;
+        if (q < 0) {
+            p = -p;
+            q = -q;
+        }
     }
 }
 

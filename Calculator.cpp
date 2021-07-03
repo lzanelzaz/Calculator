@@ -1,4 +1,5 @@
 #include "Calculator.h"
+#include "expression_parser.h"
 
 #include <QRegularExpression>
 #include <QString>
@@ -60,28 +61,8 @@ QPushButton* Calculator::createButton(const QString& str) {
 }
 
 void Calculator::calculate(){
-    Rational fOperand2 = Parser(m_stk.pop());
-    QString strOperation = m_stk.pop();
-    Rational fOperand1 = Parser(m_stk.pop());
-    bool error = false;
-    if (strOperation == "+") {
-        fResult = fOperand1 + fOperand2;
-    }
-    else if (strOperation == "-"){
-        fResult = fOperand1 - fOperand2;
-    }
-    else if (strOperation == "/") {
-        if (fOperand2 == Rational(0, 1)) {
-            error = true;
-        }
-        else {
-        fResult = fOperand1 / fOperand2;
-        }
-    }
-    else if (strOperation == "*") {
-        fResult = fOperand1 * fOperand2;
-    }
-    if (error){
+    fResult = ParseCondition(m_strDisplay);
+    if (fResult == Rational(1,0)){
         m_plcd_result->setText("Division by zero");
         return;
     }
@@ -97,28 +78,24 @@ void Calculator::calculate(){
 }
 
 void Calculator::slotButtonClicked() {
+    disconnect(pcmd, SIGNAL(toggled(bool)), this, SLOT(decimalButtonClicked(bool)));
     QString str = ((QPushButton*)sender())->text();
     /* backspace */
     if (str == "<-") {
-        /* prevent app crash */
-        if (m_stk.empty()){
-            str = "CE";
-        }
-        else {
         if (!m_strDisplay.isEmpty()){
             m_strDisplay.chop(1);
             m_plcd->setText(m_strDisplay);
-        }
         return;
+        }
+        else {
+            str = "CE";
         }
     }
     /* clear everything */
     if (str == "CE") {
-        m_stk.clear();
         m_strDisplay = "";
         m_plcd->setText("0");
         m_plcd_result->setText("");
-        disconnect(pcmd, SIGNAL(toggled(bool)), this, SLOT(decimalButtonClicked(bool)));
         return;
     }
     /* display digits */
@@ -136,27 +113,24 @@ void Calculator::slotButtonClicked() {
         m_plcd->setText(m_strDisplay);
     }
     else if (str == "=") {
+        /* User can write in the line instead of clicking buttons */
+        m_strDisplay = m_plcd->text();
         /* If double click, app doesn't crash */
-        if (m_stk.empty()) {
+        if (m_strDisplay.right(1) == "="){
             return;
         }
         int index = m_strDisplay.lastIndexOf(QRegularExpression("[/*-+]")) + 1;
         index = m_strDisplay.length() - index;
         if (index == 0){
             /* If user forgot to write second number, app doesn't crash */
-            m_plcd_result->setText(m_strDisplay.left(m_strDisplay.lastIndexOf(QRegularExpression("[/*-+]"))));
+            m_plcd_result->setText(m_strDisplay.left(m_strDisplay.length() - 1));
             return;
         }
-        m_stk.push(m_strDisplay.right(index));
+        calculate();
         m_strDisplay += str;
         m_plcd->setText(m_strDisplay);
-        calculate();
-        m_stk.clear();
-        m_strDisplay = "";
     }
     else { /* '/', '*', '-', '+' */
-        m_stk.push(m_plcd->text());
-        m_stk.push(str);
         m_strDisplay += str;
         m_plcd->setText(m_strDisplay);
     }

@@ -10,13 +10,17 @@ CONFIG += c++11
 
 SOURCES += \
     Calculator.cpp \
+    expression_parser.cpp \
     main.cpp \
     rational.cpp \
+    token.cpp \
     widget.cpp
 
 HEADERS += \
     Calculator.h \
+    expression_parser.h \
     rational.h \
+    token.h \
     widget.h
 
 # Default rules for deployment.

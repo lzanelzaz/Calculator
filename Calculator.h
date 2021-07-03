@@ -2,7 +2,6 @@
 
 #include <QtWidgets>
 #include <QLineEdit>
-#include <QStack>
 
 #include "rational.h"
 
@@ -14,7 +13,6 @@ private:
     QLineEdit* m_plcd;
     QLineEdit* m_plcd_result;
     QRadioButton* pcmd;
-    QStack<QString> m_stk;
     QString m_strDisplay;
     Rational fResult;
 public:
