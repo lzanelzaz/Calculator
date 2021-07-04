@@ -1,5 +1,5 @@
 #include "rational.h"
-#include <QRegularExpression>
+#include <QtMath>
 
 /* default = 0/1 */
 Rational::Rational()
@@ -11,6 +11,7 @@ Rational::Rational()
 Rational::Rational(int numerator, int denominator)
 {
     int a = numerator, b = denominator;
+
     /* Find Greatest Common Denominator - Euclidean algorithm */
     if (b == 1) {
         p = a;
@@ -20,8 +21,8 @@ Rational::Rational(int numerator, int denominator)
         p = -a;
         q = 1;
     } else {
-        while (a > 0 && b > 0) {
-            if (a > b) {
+        while (qFabs(a) > 0 && qFabs(b) > 0) {
+            if (qFabs(a) > qFabs(b)) {
                 a %= b;
             }
             else {
@@ -38,33 +39,22 @@ Rational::Rational(int numerator, int denominator)
     }
 }
 
-/* returns the value of n raise to the power of 10 *
- * in order to not use additional library          */
-int Pow_base10(int n){
-    int res = 1;
-    while (n--){
-        res *= 10;
-    }
-    return res;
-}
-
 Rational Parser(QString str)
 {   /* if decimal */
     if (str.contains('.')) {
         int index = str.indexOf('.') + 1;
         index = str.length() - index;
-        index = Pow_base10(index);
+        index = qPow(index, 10);
         return Rational(static_cast<int>(str.toDouble()*index), index);
     }
     /* if fraction */
-    int index = str.indexOf(QRegularExpression("/")) + 1;
+    int index = str.indexOf("/") + 1;
     /* if integer */
     if (index == 0){
         return Rational(str.toInt(), 1);
     }
     else {
-        index = str.length() - index;
-        return Rational(str.left(index).toInt(), str.right(index).toInt());
+        return Rational(str.left(index-1).toInt(), str.right(str.length() - index).toInt());
     }
 }
 

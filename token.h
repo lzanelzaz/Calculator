@@ -1,8 +1,7 @@
 #pragma once
 
 #include <QString>
-#include <QVector>
-#include <QStack>
+#include <QList>
 
 enum class TokenType {
   OPERAND,
@@ -16,4 +15,6 @@ struct Token {
   TokenType type;
 };
 
-QVector<Token> Tokenize(QString& cl);
+QList<Token> Tokenize(const QString& cl);
+
+bool operator== (const Token& a, const Token& b);

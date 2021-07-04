@@ -27,10 +27,11 @@ Calculator::Calculator(QWidget* pwgt/*= О*/) : QWidget(pwgt)
     font_size(m_plcd_result, 12);
     m_plcd_result->setMinimumSize(150, 50);
 
-    QChar aButtons[4] [4] = {{'7', '8', '9', '/'},
-                             {'4', '5', '6', '*'},
-                             {'1', '2', '3', '-'},
-                             {'0', '.', '=', '+'}
+    QString aButtons[5] [4] = {{"(", ")", "<-", "CE"},
+                             {"7", "8", "9", "/"},
+                             {"4", "5", "6", "*"},
+                             {"1", "2", "3", "-"},
+                             {"0", ".", "=", "+"}
                             };
     //Layout setup
     QGridLayout* ptopLayout = new QGridLayout;
@@ -42,9 +43,7 @@ Calculator::Calculator(QWidget* pwgt/*= О*/) : QWidget(pwgt)
     font_size(pcmd, 8);
 
     ptopLayout->addWidget(pcmd, 2, 0);
-    ptopLayout->addWidget(createButton("<-"), 2, 2);
-    ptopLayout->addWidget(createButton("CE"), 2, 3);
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 5; ++i) {
         for (int j = 0; j < 4; ++j) {
         ptopLayout->addWidget(createButton(aButtons[i][j]), i + 3, j);
         }
@@ -63,7 +62,7 @@ QPushButton* Calculator::createButton(const QString& str) {
 void Calculator::calculate(){
     fResult = ParseCondition(m_strDisplay);
     if (fResult == Rational(1,0)){
-        m_plcd_result->setText("Division by zero");
+        m_plcd_result->setText("Error"); // prevents app crashes
         return;
     }
     /* fraction form */
@@ -73,7 +72,7 @@ void Calculator::calculate(){
         /* decimal form */
         m_plcd_result->setText(QString::number(fResult.toDecimal()));
     }
-    /* Change from fraction to decimal while answer is on screen */
+    /* change from fraction to decimal while answer is on screen */
     connect(pcmd, SIGNAL(toggled(bool)), SLOT(decimalButtonClicked(bool) ));
 }
 
@@ -130,7 +129,7 @@ void Calculator::slotButtonClicked() {
         m_strDisplay += str;
         m_plcd->setText(m_strDisplay);
     }
-    else { /* '/', '*', '-', '+' */
+    else { /* '/', '*', '-', '+', '(', ')' */
         m_strDisplay += str;
         m_plcd->setText(m_strDisplay);
     }

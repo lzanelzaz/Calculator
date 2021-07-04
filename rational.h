@@ -15,7 +15,7 @@ public:
     int Numerator() const;
     int Denominator() const;
 
-private:
+protected:
     int p;
     int q;
 };
