@@ -1,5 +1,4 @@
 #include "rational.h"
-#include <QtMath>
 
 /* default = 0/1 */
 Rational::Rational()
@@ -8,10 +7,16 @@ Rational::Rational()
     q = 1;
 }
 
+int abs(int x){     // absolute value
+    if (x >= 0){
+        return x;
+    }
+    return -x;
+}
+
 Rational::Rational(int numerator, int denominator)
 {
     int a = numerator, b = denominator;
-
     /* Find Greatest Common Denominator - Euclidean algorithm */
     if (b == 1) {
         p = a;
@@ -21,8 +26,8 @@ Rational::Rational(int numerator, int denominator)
         p = -a;
         q = 1;
     } else {
-        while (qFabs(a) > 0 && qFabs(b) > 0) {
-            if (qFabs(a) > qFabs(b)) {
+        while (abs(a) > 0 && abs(b) > 0) {
+            if (abs(a) > abs(b)) {
                 a %= b;
             }
             else {
@@ -39,12 +44,20 @@ Rational::Rational(int numerator, int denominator)
     }
 }
 
+int pow_base10(int x){  // x raised to the power of 10
+    int result = 1;
+    while (x--){
+        result *= 10;
+    }
+    return result;
+}
+
 Rational Parser(QString str)
 {   /* if decimal */
     if (str.contains('.')) {
         int index = str.indexOf('.') + 1;
-        index = str.length() - index;
-        index = qPow(index, 10);
+        index = str.length() - index;   // how many symbols after '.'
+        index = pow_base10(index);
         return Rational(static_cast<int>(str.toDouble()*index), index);
     }
     /* if fraction */

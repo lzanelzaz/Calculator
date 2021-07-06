@@ -20,9 +20,10 @@ protected:
     int q;
 };
 
-int Pow_base10(int n);
+int abs(int x); // absolute value
+int pow_base10(int x); // x raised to the power of 10
 
-Rational Parser(QString str);
+Rational Parser(QString str); // parser from string to rational
 
 bool operator == (const Rational a, const Rational b);
 

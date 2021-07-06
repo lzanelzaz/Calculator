@@ -4,10 +4,10 @@
 #include <QList>
 
 enum class TokenType {
-  OPERAND,
-  LOGICAL_OP,
-  PAREN_LEFT,
-  PAREN_RIGHT
+  OPERAND,      // number
+  LOGICAL_OP,   // '/', '*', '-', '+'
+  PAREN_LEFT,   // '('
+  PAREN_RIGHT   // ')'
 };
 
 struct Token {

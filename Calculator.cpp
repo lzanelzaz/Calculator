@@ -15,15 +15,13 @@ void font_size (T pointer, int size)
 
 Calculator::Calculator(QWidget* pwgt/*= О*/) : QWidget(pwgt)
 {
-    /* equation line */
+    /* expression line */
     m_plcd = new QLineEdit("0");
-    m_plcd->setMaxLength(16);
     font_size(m_plcd, 12);
     m_plcd->setMinimumSize(150, 50);
 
     /* answer line */
     m_plcd_result = new QLineEdit("");
-    m_plcd_result->setMaxLength(16);
     font_size(m_plcd_result, 12);
     m_plcd_result->setMinimumSize(150, 50);
 
@@ -78,16 +76,16 @@ void Calculator::calculate(){
 
 void Calculator::slotButtonClicked() {
     disconnect(pcmd, SIGNAL(toggled(bool)), this, SLOT(decimalButtonClicked(bool)));
-    QString str = ((QPushButton*)sender())->text();
+    QString str = ((QPushButton*)sender())->text(); // value of clicked button
     /* backspace */
     if (str == "<-") {
-        if (!m_strDisplay.isEmpty()){
-            m_strDisplay.chop(1);
-            m_plcd->setText(m_strDisplay);
-        return;
+        if (!m_strDisplay.isEmpty()){ // if equation line is not empty
+            m_strDisplay.chop(1); // delete last character
+            m_plcd->setText(m_strDisplay); // change text of expression line
+        return; // skip next
         }
         else {
-            str = "CE";
+            str = "CE"; // if expression line is empty clear everything
         }
     }
     /* clear everything */
@@ -101,7 +99,7 @@ void Calculator::slotButtonClicked() {
     else if (str.contains(QRegularExpression("[0-9]"))) {
         m_strDisplay += str;
         m_plcd->setText(m_strDisplay);
-        m_plcd_result->setText("");
+        m_plcd_result->setText(""); // so previous answer won't be there
     }
     /* User can write ".2" instead of "0.2" */
     else if (str == ".") {
@@ -118,12 +116,8 @@ void Calculator::slotButtonClicked() {
         if (m_strDisplay.right(1) == "="){
             return;
         }
-        int index = m_strDisplay.lastIndexOf(QRegularExpression("[/*-+]")) + 1;
-        index = m_strDisplay.length() - index;
-        if (index == 0){
-            /* If user forgot to write second number, app doesn't crash */
-            m_plcd_result->setText(m_strDisplay.left(m_strDisplay.length() - 1));
-            return;
+        while (m_strDisplay.right(1).contains(QRegularExpression("\\D"))){  // last number is not there
+            m_strDisplay = m_strDisplay.left(m_strDisplay.length()-1);      // example: 8/-=
         }
         calculate();
         m_strDisplay += str;
@@ -136,6 +130,6 @@ void Calculator::slotButtonClicked() {
 }
 
 void Calculator::decimalButtonClicked(bool checked){
-    if (checked) { m_plcd_result->setText(QString::number(fResult.toDecimal())); }
-    else { m_plcd_result->setText(fResult.toString()); }
+    if (checked) { m_plcd_result->setText(QString::number(fResult.toDecimal())); }  // decimal form
+    else { m_plcd_result->setText(fResult.toString()); }                            // fraction form
 }
