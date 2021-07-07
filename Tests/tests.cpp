@@ -122,6 +122,7 @@ void Tests::Test_Expression_Parser(){
     }
     // ParseCondition
     QCOMPARE(ParseCondition("1+2*8/-2"), Rational(-7, 1));
+    QCOMPARE(ParseCondition("(1+2*8/-2)"), Rational(-7, 1));
     QCOMPARE(ParseCondition("-9"), Rational(-9, 1));
     QCOMPARE(ParseCondition("3.285").toDecimal(), 3.285);
 }
