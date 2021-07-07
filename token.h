@@ -1,20 +1,14 @@
 #pragma once
 
-#include <QString>
 #include <QList>
+#include "rational.h"
 
-enum class TokenType {
-  OPERAND,      // number
-  LOGICAL_OP,   // '/', '*', '-', '+'
-  PAREN_LEFT,   // '('
-  PAREN_RIGHT   // ')'
-};
+enum class TokenType;
 
-struct Token {
-  QString value;
-  TokenType type;
-};
+struct Token;
 
-QList<Token> Tokenize(const QString& cl);
+QString number_input (QString::const_iterator& c, const QString& list);
+
+QList<Token> Tokenize(const QString& str);
 
 bool operator== (const Token& a, const Token& b);

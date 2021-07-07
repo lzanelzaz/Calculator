@@ -3,9 +3,7 @@
 #include <QtWidgets>
 #include <QLineEdit>
 
-#include "rational.h"
-
-class QPushButton;
+#include "expression_parser.h"
 
 class Calculator : public QWidget {
 Q_OBJECT

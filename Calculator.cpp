@@ -1,5 +1,4 @@
 #include "Calculator.h"
-#include "expression_parser.h"
 
 #include <QRegularExpression>
 #include <QString>
@@ -116,7 +115,7 @@ void Calculator::slotButtonClicked() {
         if (m_strDisplay.right(1) == "="){
             return;
         }
-        while (m_strDisplay.right(1).contains(QRegularExpression("\\D"))){  // last number is not there
+        while (m_strDisplay.right(1).contains(QRegularExpression("[/*-+]"))){  // last number is not there
             m_strDisplay = m_strDisplay.left(m_strDisplay.length()-1);      // example: 8/-=
         }
         calculate();

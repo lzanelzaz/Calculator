@@ -1,13 +1,19 @@
 #include "expression_parser.h"
-#include "token.h"
-#include "rational.h"
 
-Rational ParseOperation(QList<Token>& tokens);  // 2 numbers and operator between them
+enum class TokenType {
+  OPERAND,      // number
+  LOGICAL_OP,   // '/', '*', '-', '+'
+  PAREN_LEFT,   // '('
+  PAREN_RIGHT   // ')'
+};
 
-Rational ParseExpression(QList<Token>& tokens); // whole expression
+struct Token {
+  QString value;
+  TokenType type;
+};
 
 Rational ParseParentheses(QList<Token>& tokens){
-    if (tokens.first().value == "("){                                       // example: (1+2)*(1+3)
+    if (tokens.first().value == "("){
         int index = tokens.indexOf({")", TokenType::PAREN_RIGHT});
         auto t = tokens.first(index+1);                                     // slice of expression with parentheses
         while (t.count({"(", TokenType::PAREN_LEFT}) !=                     // example: (1+(2-5))*8
@@ -72,10 +78,10 @@ Rational ParseExpression(QList<Token>& tokens) {
                  (tokens.at(index-1).value == ")" || tokens.at(index+1).value == "(")){
           if (tokens.at(index-1).value == ")" &&    // if (...)_(...)
               tokens.at(index+1).value == "("){
-                tokens.insert(tokens.indexOf({"(", TokenType::PAREN_LEFT}),
-                              {"(", TokenType::PAREN_LEFT});                            // ((...)_(...)
-                tokens.insert(tokens.indexOf({")", TokenType::PAREN_RIGHT}, index+1),
-                              {")", TokenType::PAREN_RIGHT});                           // ((...)_(...))
+                tokens.insert(tokens.indexOf({")", TokenType::PAREN_RIGHT}, index),
+                              {")", TokenType::PAREN_RIGHT});                           // (...)_(...))
+                tokens.insert(tokens.lastIndexOf({"(", TokenType::PAREN_LEFT}, index),
+                              {"(", TokenType::PAREN_LEFT});                            // ((...)_(...))
           } else if (tokens.at(index-1).value == ")"){  // if ..._(...)
                tokens.insert(index+2,
                              {")", TokenType::PAREN_RIGHT});                // ..._(...))
