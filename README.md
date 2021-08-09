@@ -13,3 +13,7 @@
  Use "<-" (backspace) to erase last symbol. User can erase "=" after getting answer, add something and press "=" again. 
  
  "CE" - clear everything.
+
+![screenshot](https://i.ibb.co/zGd5DwT/WXd-Hu-Mb4-Me-Y.jpg)
+
+![screenshot](https://i.ibb.co/z6FNhVH/Wr-Ry-Nkw-Glj-U.jpg)
